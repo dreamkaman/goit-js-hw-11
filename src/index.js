@@ -23,8 +23,6 @@ const galleryEl = document.querySelector('.gallery');
 
 let currentPage = 1;
 
-let queryStr = '';
-
 let gallery = new SimpleLightbox('.gallery a');
 
 
@@ -32,16 +30,15 @@ let gallery = new SimpleLightbox('.gallery a');
 
 
 
-const getImages = (query, page) => {
+const getImages = async (query, page) => {
 
-    return axios.get(`${BASE_URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${LIMIT}`)
-    .then(res => {
+    const res = await axios.get(`${BASE_URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${LIMIT}`);
+    
 
-            btnLoadMoreEl.classList.add('visually-hidden');
+        btnLoadMoreEl.classList.add('visually-hidden');
         
         const { total, hits } = res.data;
         
-        console.log(res.data);
 
         if (total === 0) {
 
@@ -90,17 +87,12 @@ const getImages = (query, page) => {
             };
             
         }
-    }
-    )
 };
 
 
-const getImagesMore = (query, page) => {
+const getImagesMore = async (query, page) => {
 
-    console.log(currentPage);
-
-    return axios.get(`${BASE_URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${LIMIT}`)
-    .then(res => {
+    const res = await axios.get(`${BASE_URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${LIMIT}`)
         
             const { totalHits, hits } = res.data;
 
@@ -140,9 +132,6 @@ const getImagesMore = (query, page) => {
             Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.", NotiflixSettings)
     }
                 
-    }
-        
-    )
 };
 
 
@@ -150,18 +139,20 @@ const onFormSubmit = event => {
     
     event.preventDefault();
 
-    queryStr = inputEl.value;
+    const queryStr = inputEl.value;
 
-    getImages(queryStr, currentPage = 1); //============================= by default page = 1;
+    getImages(queryStr, currentPage = 1);
 
 };
 
 formEl.addEventListener('submit', onFormSubmit);
 
 
-const onLoadMoreClick = event => {
+const onLoadMoreClick = () => {
     
     currentPage += 1;
+
+    const queryStr = inputEl.value;
 
     getImagesMore(queryStr, currentPage);
     
@@ -170,6 +161,3 @@ const onLoadMoreClick = event => {
 
 
 btnLoadMoreEl.addEventListener ('click', onLoadMoreClick);
-
-
-
