@@ -27,15 +27,12 @@ let gallery = new SimpleLightbox('.gallery a');
 
 
 
-
-
-
 const getImages = async (query, page) => {
 
     const res = await axios.get(`${BASE_URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${LIMIT}`);
     
 
-        btnLoadMoreEl.classList.add('visually-hidden');
+    btnLoadMoreEl.classList.add('visually-hidden');
         
         const { total, hits } = res.data;
         
